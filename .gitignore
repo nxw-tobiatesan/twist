@@ -1,2 +1,6 @@
+target
+.ensime
+.ensime_cache
 *.class
 *.log
+*~
