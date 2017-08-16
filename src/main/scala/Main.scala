@@ -3,6 +3,7 @@ import com.tobiatesan.twist.ai.minimax.{
   BasicAlphaBeta,
   KillerAlphaBeta
 }
+import com.tobiatesan.twist.ai.mtcs.{UCTAgent}
 import com.tobiatesan.twist.ai.{RandomAgent}
 import com.tobiatesan.twist.draughts.{Draughts}
 import com.tobiatesan.twist.matches.{Match}
@@ -115,10 +116,28 @@ object HumanVsAlpha extends App {
                                              draughts.BasicDraughtsMoveOrdering,
                                              10)
   val player2 = new GenericHumanPlayer[Draughts](console)
-  val matsch = new Match(player1, player2, false, p)
+  val m = new Match(player1, player2, false, p)
   print("Type quit to exit\n")
   try {
-    matsch.run()
+    val res = m.run()
+    print(res.t)
+  } catch {
+    case e: QuitException => print("Quitting, bye!\n")
+  }
+}
+
+object HumanVsMTCS extends App {
+  // Super quick & dirty main method
+  val p = basicDraughts.startingPosition
+  val console = new BasicConsole()
+  val player1 =
+    new UCTAgent[Draughts](2000, 1.25, false, new scala.util.Random(0))
+  val player2 = new GenericHumanPlayer[Draughts](console)
+  val m = new Match(player1, player2, false, p)
+  print("Type quit to exit\n")
+  try {
+    val res = m.run()
+    print(res.t)
   } catch {
     case e: QuitException => print("Quitting, bye!\n")
   }
