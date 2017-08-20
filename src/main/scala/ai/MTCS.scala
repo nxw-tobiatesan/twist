@@ -99,14 +99,14 @@ class UCTAgent[G <: Game[G]](val budget: Int,
     val move = SelectMove(p, node, c)
     p.successor.get(move).get match {
       case (Right(t)) =>
-        ((sim: (Utility, NodeCount)) =>
+        // Terminal game position, return utility
           (UCTNode(p,
-                   node.num + sim._1,
+                   node.num + t.utility,
                    node.den + 1,
                    node.maxNode,
                    node.children),
-           sim._2 + 1,
-           sim._1))(SimDefault(Right(t)))
+           1,
+           t.utility)
       case (Left(l)) =>
         if (node.children contains move) {
           // Already in tree and not terminal, continue with tree policy
