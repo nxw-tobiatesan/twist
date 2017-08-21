@@ -161,3 +161,57 @@ object NaiveDraughtsEvaluation extends MinimaxEvaluation[Draughts] {
 
     }
 }
+
+/**
+  * This evaluation tries to address the blindness of BasicDraughtsEvaluation to
+  *  the approaching timeout by converging to 0 towards the end of the game.
+  */
+object ClockAwareDraughtsEvaluation extends MinimaxEvaluation[Draughts] {
+  def apply(p: LivePosition[Draughts]): Double =
+    p match {
+      case (p: LiveDraughtsPosition) =>
+        Math.sqrt((p.TTL - p.ply).toDouble / p.TTL.toDouble) *
+          (p.board.filter(_ == Some(Man(Max))).size * 1 +
+            p.board.filter(_ == Some(Man(Min))).size * -1 +
+            p.board.filter(_ == Some(King(Max))).size * 2 +
+            p.board.filter(_ == Some(King(Min))).size * -2).toDouble / 24
+
+    }
+}
+
+/**
+  * Expands upon ClockAwareDraughtsEvaluation by putting a premium on
+  * men approaching king's row
+  */
+object PositionAwareDraughtsEvaluation extends MinimaxEvaluation[Draughts] {
+  def apply(p: LivePosition[Draughts]): Double = {
+    p match {
+      case (p: LiveDraughtsPosition) => {
+        Math.max(
+          -1,
+          Math.min(
+            1,
+            Math.sqrt((p.TTL - p.ply).toDouble / p.TTL.toDouble) *
+              NaiveDraughtsEvaluation.apply(p) +
+              (Seq(5, 6, 7, 8)
+                .map(p.board(_))
+                .filter(_ == Some(Man(Max)))
+                .size * 2 +
+                Seq(9, 10, 11, 12)
+                  .map(p.board(_))
+                  .filter(_ == Some(Man(Max)))
+                  .size * 1 +
+                Seq(28, 27, 26, 25)
+                  .map(p.board(_))
+                  .filter(_ == Some(Man(Min)))
+                  .size * -2 +
+                Seq(24, 23, 22, 21)
+                  .map(p.board(_))
+                  .filter(_ == Some(Man(Min)))
+                  .size * -1).toDouble / 24
+          )
+        )
+      }
+    }
+  }
+}
