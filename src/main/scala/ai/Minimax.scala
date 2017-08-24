@@ -336,11 +336,11 @@ class KillerAlphaBeta[G <: Game[G]](e: MinimaxEvaluation[G],
   */
 class QuiescenceAlphaBeta[G <: Game[G]](e: MinimaxEvaluation[G],
                                         o: AlphaBetaOrdering[G],
-                                        ply: Int,
+                                        depth: Int,
                                         q: QuiescenceCheck[G],
                                         extraPlys: Int,
                                         maximize: Boolean = false)
-    extends BasicAlphaBeta[G](e, o, ply, maximize) {
+    extends BasicAlphaBeta[G](e, o, depth, maximize) {
   override def iter(l: Either[LivePosition[G], TerminalPosition[G]],
                     plyLeft: Int,
                     alpha: Double = Double.NegativeInfinity,
