@@ -123,7 +123,7 @@ abstract class AbstractAlphaBeta[G <: Game[G]](e: MinimaxEvaluation[G],
       .fold(new AlphaBetaStats[G](0, 0, 0, 0))(_ + _)
     val rankedMoves = evaluatedMoves.toList
       .map((t: ((Move[G]), (Double, AlphaBetaStats[G]))) => (t._1, t._2._1)) // Discard stats
-      .sortWith(_._2 > _._2)
+      .sortWith(_._2 < _._2)
     if (maximize)
       MoveWithStats[G, Move[G], AlphaBetaStats[G]](rankedMoves.last._1,
                                                    cumulativeStats)

@@ -350,9 +350,9 @@ class TerminalDraughtsPosition(board: Board,
     if (winner == None)
       0
     else if (winner == Some(Min))
-      1
-    else
       -1
+    else
+      1
   }
 
   override def toString(): String =
