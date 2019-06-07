@@ -31,6 +31,9 @@ copying and pasting algorithms found in literature verbatim.
 simplification wrt the [WDCF rules](http://www.wcdf.net/): a draw is
 had after `n` moves, with `n` set to `100` by default.**
 
+## Full documentation
+
+Available [here](http://www.tobiatesan.it/files/twist.pdf).
 
 ## How do I run it?
 
