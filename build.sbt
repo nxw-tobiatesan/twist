@@ -12,3 +12,14 @@ lazy val root = (project in file(".")).
     libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.4",
     mainClass := Some("com.tobiatesan.Twist.Main")
   )
+
+// resolvers (0.13 syntax)
+resolvers ++= Seq(
+  "Maven Central" at "https://repo1.maven.org/maven2/",
+  Resolver.typesafeRepo("releases")
+)
+
+// (optional) pin jline to avoid the old transitive
+dependencyOverrides += "jline" % "jline" % "2.14.6"
+// or as a direct dependency:
+// libraryDependencies += "jline" % "jline" % "2.14.6"
