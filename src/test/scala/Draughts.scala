@@ -1,9 +1,9 @@
 package com.tobiatesan.twist.draughts
 import com.tobiatesan.twist.draughts.board._
 import com.tobiatesan.twist.game.{Min, Max}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class gameTest extends FunSuite {
+class gameTest extends AnyFunSuite {
   val game = new Draughts()
   test("newGame looks ok") {
     val newGame = game.startingPosition

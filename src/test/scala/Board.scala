@@ -3,9 +3,9 @@ import com.tobiatesan.twist.game.{Side, Min, Max}
 import Board._
 import util._
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class boardTest extends FunSuite {
+class boardTest extends AnyFunSuite {
   test("pdn 1 = index (0,1)") {
     assert(pdnToCoordinate(1: Pdn) == ((0, 1): Coordinate))
   }
