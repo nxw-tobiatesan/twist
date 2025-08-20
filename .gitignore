@@ -4,3 +4,8 @@ target
 *.class
 *.log
 *~
+.aider*
+.metals
+project/
+.vscode
+.bloop
