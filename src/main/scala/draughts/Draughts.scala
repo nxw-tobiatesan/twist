@@ -142,10 +142,13 @@ class LiveDraughtsPosition(board: Board,
       val from = jumps.head
       val to = jumps.tail.head
       val lastJump = jumps.tail.tail.length == 0
-      val captured = Board.midPoint(from, to)
-
-      val updated =
-        b.updated(to, b(from)).updated(captured, None).updated(from, None)
+      val capturedOpt = Board.midPoint(from, to)
+      val updated = capturedOpt match {
+        case Some(captured) =>
+          b.updated(to, b(from)).updated(captured, None).updated(from, None)
+        case None =>
+          throw new IllegalArgumentException(s"recUpdateBoard: midPoint is undefined for from=$from to=$to")
+      }
       // After a jump remove the man from its original position,
       // place it on its destination square and remove the captured
       // piece

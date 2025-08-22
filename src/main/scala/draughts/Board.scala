@@ -170,13 +170,18 @@ object Board {
     case Some(Man(Min))  => 'x'
   }
 
-  def midPoint(from: Pdn, to: Pdn): Pdn = {
-    assert(1 <= to && from <= 32)
-    assert(1 <= from && from <= 32)
-    val start = pdnToCoordinate(from);
-    val end = pdnToCoordinate(to);
-    val diff = ((end._1 - start._1), (end._2 - start._2));
-    coordinateToPdn((start._1 + (diff._1 / 2), start._2 + (diff._2 / 2)))
+  def midPoint(from: Pdn, to: Pdn): Option[Pdn] = {
+    if (!(1 <= to && to <= 32) || !(1 <= from && from <= 32)) return None
+    val start = pdnToCoordinate(from)
+    val end = pdnToCoordinate(to)
+    val rowDiff = end._1 - start._1
+    val colDiff = end._2 - start._2
+    // In draughts, a valid capture is two squares apart diagonally
+    val isValidCapture = (math.abs(rowDiff) == 2) && (math.abs(colDiff) == 2)
+    if (!isValidCapture) return None
+    val midRow = start._1 + rowDiff / 2
+    val midCol = start._2 + colDiff / 2
+    Some(coordinateToPdn((midRow, midCol)))
   }
 }
 

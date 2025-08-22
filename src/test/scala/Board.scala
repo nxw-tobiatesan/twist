@@ -182,9 +182,9 @@ o o o o """)
   }
 
   test("midPoint works ok") {
-    assert(midPoint(2, 9) == 6)
-    assert(midPoint(31, 24) == 27)
-    assert(midPoint(20, 11) == 16)
-    assert(midPoint(5, 14) == 9)
+    assert(midPoint(2, 9) == Some(6))
+    assert(midPoint(31, 24) == Some(27))
+    assert(midPoint(20, 11) == Some(16))
+    assert(midPoint(5, 14) == Some(9))
   }
 }

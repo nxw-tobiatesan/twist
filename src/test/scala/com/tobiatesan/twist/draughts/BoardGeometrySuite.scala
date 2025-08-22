@@ -65,5 +65,16 @@ class BoardGeometrySuite extends AnyFunSuite {
         assert(!Board.isNorthernEdge(x))
       })
   }
-  // ...existing code for directions, toString, and midPoint tests...
+  test("midPoint returns Some for valid capture moves") {
+    assert(Board.midPoint(2, 9) == Some(6))
+    assert(Board.midPoint(31, 24) == Some(27))
+    assert(Board.midPoint(20, 11) == Some(16))
+    assert(Board.midPoint(5, 14) == Some(9))
+  }
+  test("midPoint returns None for invalid moves") {
+    assert(Board.midPoint(1, 5) == None)
+    assert(Board.midPoint(1, 2) == None)
+    assert(Board.midPoint(0, 10) == None)
+    assert(Board.midPoint(10, 33) == None)
+  }
 }
