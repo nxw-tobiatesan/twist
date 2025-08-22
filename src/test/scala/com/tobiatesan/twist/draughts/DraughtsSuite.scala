@@ -1,6 +1,8 @@
 package com.tobiatesan.twist.draughts
-import org.scalatest.funsuite.AnyFunSuite
 
+
+
+import org.scalatest.funsuite.AnyFunSuite
 
 class DraughtsSuite extends AnyFunSuite {
   test("Draughts.startingPosition returns a valid LivePosition") {
