@@ -6,8 +6,11 @@ import scala.io.StdIn
 
 object Main extends App {
   println("Welcome to Tic Tac Toe!")
-  import com.tobiatesan.twist.tictactoe.{RandomAgent, MinimaxAgent, MCTSAgent, Agent}
-  import com.tobiatesan.twist.ai.gpt.{GPTRandomAgent, GPTMinimaxAgent, GPTMCTSAgent, GPTAgent}
+  import com.tobiatesan.twist.ai.RandomAgent
+  import com.tobiatesan.twist.ai.minimax.{MinimaxEvaluation, AlphaBetaOrdering, BasicAlphaBeta}
+  import com.tobiatesan.twist.ai.mtcs.UCTAgent
+  import com.tobiatesan.twist.player.AI
+  import com.tobiatesan.twist.tictactoe.TicTacToeLivePosition
   var game = Game()
 
   def printBoard(board: Board): Unit = {
@@ -49,21 +52,31 @@ object Main extends App {
     move
   }
 
-  def agentMove(agent: Agent): Move = agent.selectMove(game)
-  def gptAgentMove(agent: GPTAgent): Move = agent.selectMove(game)
+  def agentMove(agent: AI[Game]): Move = {
+    val pos = new TicTacToeLivePosition(game)
+    agent.debug(pos).move.asInstanceOf[Move]
+  }
 
   def playGame(xType: String, oType: String): Unit = {
     game = Game()
+    val random = new scala.util.Random(0)
+    val minimaxEval = new MinimaxEvaluation[Game] {
+      def apply(p: com.tobiatesan.twist.game.LivePosition[Game]): Double = 0.0 // TODO: Implement evaluation
+    }
+    val ordering = new AlphaBetaOrdering[Game] {
+      def compare(x: com.tobiatesan.twist.game.Move[Game], y: com.tobiatesan.twist.game.Move[Game]): Int = 0 // TODO: Implement ordering
+    }
+    val minimaxAgent = new BasicAlphaBeta[Game](minimaxEval, ordering, 4)
+    val mctsAgent = new UCTAgent[Game](budget = 1000, c = 1.4, maximize = false, r = random)
+    val randomAgent = new RandomAgent[Game](random)
+
     def selectMove(mark: Mark): Move = {
       val tpe = if (mark == X) xType else oType
       tpe match {
         case "human" => humanMove()
-        case "random" => agentMove(RandomAgent)
-        case "minimax" => agentMove(MinimaxAgent)
-        case "mcts" => agentMove(MCTSAgent)
-        case "gpt-random" => gptAgentMove(GPTRandomAgent)
-        case "gpt-minimax" => gptAgentMove(GPTMinimaxAgent)
-        case "gpt-mcts" => gptAgentMove(GPTMCTSAgent)
+        case "random" => agentMove(randomAgent)
+        case "minimax" => agentMove(minimaxAgent)
+        case "mcts" => agentMove(mctsAgent)
       }
     }
     while (game.winner.isEmpty && !game.isDraw) {
@@ -78,26 +91,20 @@ object Main extends App {
     }
   }
 
-  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent  5) GPT-Random  6) GPT-Minimax  7) GPT-MCTS")
+  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
   val xAgent = StdIn.readLine().trim match {
     case "1" => "human"
     case "2" => "random"
     case "3" => "minimax"
     case "4" => "mcts"
-    case "5" => "gpt-random"
-    case "6" => "gpt-minimax"
-    case "7" => "gpt-mcts"
     case _ => "human"
   }
-  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent  5) GPT-Random  6) GPT-Minimax  7) GPT-MCTS")
+  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
   val oAgent = StdIn.readLine().trim match {
     case "1" => "human"
     case "2" => "random"
     case "3" => "minimax"
     case "4" => "mcts"
-    case "5" => "gpt-random"
-    case "6" => "gpt-minimax"
-    case "7" => "gpt-mcts"
     case _ => "human"
   }
   playGame(xType = xAgent, oType = oAgent)

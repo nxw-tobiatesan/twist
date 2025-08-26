@@ -1,35 +1,32 @@
 
-/**
- * Tic Tac Toe domain model and game logic.
- *
- * Provides types and methods for representing the board, moves, marks, and game state.
- */
 package com.tobiatesan.twist.tictactoe
+import com.tobiatesan.twist.game.{Side, Min, Max, LivePosition => GameLivePosition, Move => GameMove}
 
+class TicTacToeLivePosition(val game: Game) extends GameLivePosition[Game] {
+  def sideToMove: Side = if (game.current == X) Max else Min
+  def successor: Map[GameMove[Game], Either[GameLivePosition[Game], TicTacToeTerminalPosition]] = {
+    val moves = game.successor()
+    moves.map { case (move, next) =>
+      val lp = new TicTacToeLivePosition(next)
+      if (next.winner.isDefined || next.isDraw)
+        move -> Right(new TicTacToeTerminalPosition(next))
+      else
+        move -> Left(lp)
+    }.toMap
+  }
+}
 
-
-
-/**
- * Represents a cell mark in Tic Tac Toe.
- * X and O are player marks, Empty is an unoccupied cell.
- */
+class TicTacToeTerminalPosition(val game: Game) extends com.tobiatesan.twist.game.TerminalPosition[Game] {
+  def utility: Integer = Integer.valueOf(game.utility)
+}
+// ...existing code...
 sealed trait Mark
 case object X extends Mark
 case object O extends Mark
 case object Empty extends Mark
 
+case class Move(row: Int, col: Int) extends com.tobiatesan.twist.game.Move[Game]
 
-/**
- * Represents a move on the board (row, col).
- * Rows and columns are 0-based (0 to 2).
- */
-case class Move(row: Int, col: Int)
-
-
-/**
- * Represents the Tic Tac Toe board state.
- * @param grid 3x3 grid of Mark values (X, O, Empty)
- */
 case class Board(grid: Vector[Vector[Mark]] = Vector.fill(3,3)(Empty)) {
   /**
    * Get the mark at a given cell.
@@ -56,34 +53,30 @@ case class Board(grid: Vector[Vector[Mark]] = Vector.fill(3,3)(Empty)) {
       r <- 0 to 2
       c <- 0 to 2
       if grid(r)(c) == Empty
-    } yield Move(r, c)
+  } yield Move(r, c)
 
-  /**
-   * Returns true if the board is full (no empty cells).
-   */
+  /** Returns true if the board is full (no empty cells). */
   def isFull: Boolean = availableMoves.isEmpty
 }
 
+case class Game(board: Board = Board(), current: Mark = X) extends com.tobiatesan.twist.game.Game[Game] {
+  def successor(): Seq[(com.tobiatesan.twist.game.Move[Game], Game)] = {
+    board.availableMoves.map { m => (m, play(m)) }
+  }
+  def utility: Int = winner match {
+    case Some(X) => 1
+    case Some(O) => -1
+    case None => 0
+  }
+  def startingPosition(): GameLivePosition[Game] = new TicTacToeLivePosition(Game())
 
-/**
- * Represents a Tic Tac Toe game state.
- * @param board Current board
- * @param current Mark of the player to move (X or O)
- */
-case class Game(board: Board = Board(), current: Mark = X) {
-  /**
-   * Play a move for the current player. Returns a new game state.
-   * If the cell is not empty, returns the same game state.
-   * @param move Move to play
-   */
+
+
   def play(move: Move): Game = {
     if (board(move.row, move.col) != Empty) this
     else Game(board.updated(move, current), if (current == X) O else X)
   }
 
-  /**
-   * Returns the winner (X or O) if there is one, otherwise None.
-   */
   def winner: Option[Mark] = {
     val rows = board.grid
     val cols = board.grid.transpose
@@ -94,8 +87,5 @@ case class Game(board: Board = Board(), current: Mark = X) {
       .orElse(lines.find(line => line.forall(_ == O)).map(_ => O))
   }
 
-  /**
-   * Returns true if the game is a draw (board full, no winner).
-   */
   def isDraw: Boolean = board.isFull && winner.isEmpty
 }
