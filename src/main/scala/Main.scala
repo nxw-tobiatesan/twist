@@ -142,3 +142,7 @@ object HumanVsMTCS extends App {
     case e: QuitException => print("Quitting, bye!\n")
   }
 }
+
+object HumanVsTicTacToe extends App {
+  tictactoe.Main.main(Array.empty)
+}
