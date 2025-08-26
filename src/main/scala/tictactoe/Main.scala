@@ -1,8 +1,18 @@
+
 package com.tobiatesan.twist.tictactoe
 
-
-
 import scala.io.StdIn
+
+// Generic, reusable agent selection menu
+class AgentMenu(label: String, options: Seq[(String, String)], default: String) {
+  def select(): String = {
+    println(s"Choose $label agent:")
+    options.zipWithIndex.foreach { case ((name, _), idx) => println(s"  ${idx + 1}) $name") }
+    val input = scala.io.StdIn.readLine().trim
+  val idx = try { input.toInt - 1 } catch { case _: NumberFormatException => -1 }
+    if (idx >= 0 && idx < options.length) options(idx)._2 else default
+  }
+}
 
 object Main extends App {
   println("Welcome to Tic Tac Toe!")
@@ -91,21 +101,13 @@ object Main extends App {
     }
   }
 
-  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
-  val xAgent = StdIn.readLine().trim match {
-    case "1" => "human"
-    case "2" => "random"
-    case "3" => "minimax"
-    case "4" => "mcts"
-    case _ => "human"
-  }
-  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
-  val oAgent = StdIn.readLine().trim match {
-    case "1" => "human"
-    case "2" => "random"
-    case "3" => "minimax"
-    case "4" => "mcts"
-    case _ => "human"
-  }
+  val agentOptions = Seq(
+    ("Human", "human"),
+    ("RandomAgent", "random"),
+    ("MinimaxAgent", "minimax"),
+    ("MCTSAgent", "mcts")
+  )
+  val xAgent = new AgentMenu("X", agentOptions, "human").select()
+  val oAgent = new AgentMenu("O", agentOptions, "human").select()
   playGame(xType = xAgent, oType = oAgent)
 }
