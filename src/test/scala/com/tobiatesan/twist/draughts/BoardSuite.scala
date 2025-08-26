@@ -61,7 +61,9 @@ class BoardSuite extends AnyFunSuite {
 
   test("Board inequality works for different boards") {
     val b1 = Board.StartingBoard
-    val b2 = Board.StartingBoard.updated(1, Some(Man(Min)))
+    val b2 = Board.StartingBoard.updated(13, Some(Man(Min))) // 13 is empty in starting board
+    println("b1:", b1.store)
+    println("b2:", b2.store)
     assert(b1 != b2)
   }
 
@@ -85,7 +87,7 @@ class BoardSuite extends AnyFunSuite {
 
   test("Board hashCode differs for different boards") {
     val b1 = Board.StartingBoard
-    val b2 = Board.StartingBoard.updated(1, Some(Man(Min)))
+    val b2 = Board.StartingBoard.updated(13, Some(Man(Min))) // 13 is empty in starting board
     assert(b1.hashCode != b2.hashCode)
   }
 }
