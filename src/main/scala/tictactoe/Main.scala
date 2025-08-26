@@ -7,6 +7,7 @@ import scala.io.StdIn
 object Main extends App {
   println("Welcome to Tic Tac Toe!")
   import com.tobiatesan.twist.tictactoe.{RandomAgent, MinimaxAgent, MCTSAgent, Agent}
+  import com.tobiatesan.twist.ai.gpt.{GPTRandomAgent, GPTMinimaxAgent, GPTMCTSAgent, GPTAgent}
   var game = Game()
 
   def printBoard(board: Board): Unit = {
@@ -49,6 +50,7 @@ object Main extends App {
   }
 
   def agentMove(agent: Agent): Move = agent.selectMove(game)
+  def gptAgentMove(agent: GPTAgent): Move = agent.selectMove(game)
 
   def playGame(xType: String, oType: String): Unit = {
     game = Game()
@@ -59,6 +61,9 @@ object Main extends App {
         case "random" => agentMove(RandomAgent)
         case "minimax" => agentMove(MinimaxAgent)
         case "mcts" => agentMove(MCTSAgent)
+        case "gpt-random" => gptAgentMove(GPTRandomAgent)
+        case "gpt-minimax" => gptAgentMove(GPTMinimaxAgent)
+        case "gpt-mcts" => gptAgentMove(GPTMCTSAgent)
       }
     }
     while (game.winner.isEmpty && !game.isDraw) {
@@ -73,20 +78,26 @@ object Main extends App {
     }
   }
 
-  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
+  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent  5) GPT-Random  6) GPT-Minimax  7) GPT-MCTS")
   val xAgent = StdIn.readLine().trim match {
     case "1" => "human"
     case "2" => "random"
     case "3" => "minimax"
     case "4" => "mcts"
+    case "5" => "gpt-random"
+    case "6" => "gpt-minimax"
+    case "7" => "gpt-mcts"
     case _ => "human"
   }
-  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
+  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent  5) GPT-Random  6) GPT-Minimax  7) GPT-MCTS")
   val oAgent = StdIn.readLine().trim match {
     case "1" => "human"
     case "2" => "random"
     case "3" => "minimax"
     case "4" => "mcts"
+    case "5" => "gpt-random"
+    case "6" => "gpt-minimax"
+    case "7" => "gpt-mcts"
     case _ => "human"
   }
   playGame(xType = xAgent, oType = oAgent)
