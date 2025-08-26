@@ -6,6 +6,7 @@ import scala.io.StdIn
 
 object Main extends App {
   println("Welcome to Tic Tac Toe!")
+  import com.tobiatesan.twist.tictactoe.{RandomAgent, MinimaxAgent, MCTSAgent, Agent}
   var game = Game()
 
   def printBoard(board: Board): Unit = {
@@ -29,33 +30,40 @@ object Main extends App {
     var move: Move = null
     while (!valid) {
       println(s"${game.current} to move. Enter row and col (e.g. 0 2):")
-      val input = StdIn.readLine().split(" ").map(_.trim)
-      if (input.length == 2 && input.forall(_.forall(_.isDigit))) {
-        val row = input(0).toInt
-        val col = input(1).toInt
-        if (row >= 0 && row <= 2 && col >= 0 && col <= 2 && game.board(row, col) == Empty) {
-          move = Move(row, col)
-          valid = true
-        } else println("Invalid move, try again.")
+      val inputLine = StdIn.readLine().trim
+      val input = inputLine.split(" ").filter(_.nonEmpty)
+      if (input.length == 2 && input.forall(s => s.forall(_.isDigit))) {
+        try {
+          val row = input(0).toInt
+          val col = input(1).toInt
+          if (row >= 0 && row <= 2 && col >= 0 && col <= 2 && game.board(row, col) == Empty) {
+            move = Move(row, col)
+            valid = true
+          } else println("Invalid move, try again.")
+        } catch {
+          case _: NumberFormatException => println("Invalid input, try again.")
+        }
       } else println("Invalid input, try again.")
     }
     move
   }
 
-  def randomAgentMove(): Move = {
-    val moves = game.board.availableMoves
-    moves(scala.util.Random.nextInt(moves.size))
-  }
+  def agentMove(agent: Agent): Move = agent.selectMove(game)
 
-  def playGame(humanX: Boolean, humanO: Boolean): Unit = {
+  def playGame(xType: String, oType: String): Unit = {
     game = Game()
+    def selectMove(mark: Mark): Move = {
+      val tpe = if (mark == X) xType else oType
+      tpe match {
+        case "human" => humanMove()
+        case "random" => agentMove(RandomAgent)
+        case "minimax" => agentMove(MinimaxAgent)
+        case "mcts" => agentMove(MCTSAgent)
+      }
+    }
     while (game.winner.isEmpty && !game.isDraw) {
       printBoard(game.board)
-      val move = (game.current match {
-        case X if humanX => humanMove()
-        case O if humanO => humanMove()
-        case _ => randomAgentMove()
-      })
+      val move = selectMove(game.current)
       game = game.play(move)
     }
     printBoard(game.board)
@@ -65,13 +73,21 @@ object Main extends App {
     }
   }
 
-  println("Choose mode: 1) Human vs Human  2) Human vs RandomAgent  3) RandomAgent vs Human  4) RandomAgent vs RandomAgent")
-  val mode = StdIn.readLine().trim
-  mode match {
-    case "1" => playGame(humanX = true, humanO = true)
-    case "2" => playGame(humanX = true, humanO = false)
-    case "3" => playGame(humanX = false, humanO = true)
-    case "4" => playGame(humanX = false, humanO = false)
-    case _ => println("Invalid mode.")
+  println("Choose X agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
+  val xAgent = StdIn.readLine().trim match {
+    case "1" => "human"
+    case "2" => "random"
+    case "3" => "minimax"
+    case "4" => "mcts"
+    case _ => "human"
   }
+  println("Choose O agent: 1) Human  2) RandomAgent  3) MinimaxAgent  4) MCTSAgent")
+  val oAgent = StdIn.readLine().trim match {
+    case "1" => "human"
+    case "2" => "random"
+    case "3" => "minimax"
+    case "4" => "mcts"
+    case _ => "human"
+  }
+  playGame(xType = xAgent, oType = oAgent)
 }
