@@ -144,5 +144,5 @@ object HumanVsMTCS extends App {
 }
 
 object HumanVsTicTacToe extends App {
-  tictactoe.Main.main(Array.empty)
+  tictactoe.TicTacToeSample.main(Array.empty)
 }
