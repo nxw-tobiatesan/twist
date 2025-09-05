@@ -17,7 +17,7 @@ class TicTacToeLivePosition(val game: Game) extends GameLivePosition[Game] {
 }
 
 class TicTacToeTerminalPosition(val game: Game) extends com.tobiatesan.twist.game.TerminalPosition[Game] {
-  def utility: Integer = Integer.valueOf(game.utility)
+  def utility: Integer = Integer.valueOf(game.utility)  
 }
 // ...existing code...
 sealed trait Mark
