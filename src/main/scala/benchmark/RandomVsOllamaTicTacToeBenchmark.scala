@@ -19,7 +19,7 @@ object RandomVsOllamaTicTacToeBenchmark extends App {
   val rounds = 40
 
   new CSVPlusScreenPrinter[BasicMetric](
-    new File("benchmark/random_tictactoe.csv")
+    new File("benchmark/random_vs_ollama_tictactoe.csv")
   ).prin(
     Stream(
       new BasicExtractor(
