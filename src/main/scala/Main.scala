@@ -124,14 +124,31 @@ object HumanVsAlpha extends App {
   } catch {
     case e: QuitException => print("Quitting, bye!\n")
   }
+  }
+
+  object HumanVsMTCS extends App {
+    // Super quick & dirty main method
+    val p = basicDraughts.startingPosition
+    val console = new BasicConsole()
+    import com.tobiatesan.twist.ai.mtcs.UCTAgent
+    val player1 = new UCTAgent[Draughts](2000, 1.25, false, new scala.util.Random(0))
+    val player2 = new GenericHumanPlayer[Draughts](console)
+    val m = new Match(player1, player2, false, p)
+    print("Type quit to exit\n")
+    try {
+      val res = m.run()
+      print(res.t)
+    } catch {
+      case e: QuitException => print("Quitting, bye!\n")
+    }
 }
 
-object HumanVsMTCS extends App {
-  // Super quick & dirty main method
+object HumanVsOllamaDraughts extends App {
+  // Human vs Ollama LLM agent for Draughts
   val p = basicDraughts.startingPosition
   val console = new BasicConsole()
-  val player1 =
-    new UCTAgent[Draughts](2000, 1.25, false, new scala.util.Random(0))
+  import com.tobiatesan.twist.ai.OllamaAgent
+  val player1 = new OllamaAgent[Draughts](model = "gemma3")
   val player2 = new GenericHumanPlayer[Draughts](console)
   val m = new Match(player1, player2, false, p)
   print("Type quit to exit\n")

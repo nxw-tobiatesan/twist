@@ -8,9 +8,10 @@ lazy val root = (project in file(".")).
       version      := "0.1.0-SNAPSHOT"
     )),
     name := "Twist",
-    libraryDependencies += scalaTest % Test,
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test,
-    libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.4",
+  libraryDependencies += scalaTest % Test,
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+  libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.4",
+  libraryDependencies += "com.lihaoyi" %% "requests" % "0.6.9",
     mainClass := Some("com.tobiatesan.Twist.Main")
   )
 
