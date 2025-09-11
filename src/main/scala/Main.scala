@@ -106,8 +106,10 @@ class GenericHumanPlayer[G <: Game[G]](val console: Console) extends Human[G] {
 //
 ///////////////////////////////////////////////////////////
 
-object basicDraughts extends Draughts
+// import games.tictactoe.TicTacToe
 
+object basicDraughts extends Draughts
+// object basicTicTacToe extends TicTacToe
 object HumanVsAlpha extends App {
   // Super quick & dirty main method
   val p = basicDraughts.startingPosition
@@ -159,3 +161,20 @@ object HumanVsOllamaDraughts extends App {
     case e: QuitException => print("Quitting, bye!\n")
   }
 }
+
+/*
+object HumanVsOllamaTicTacToe extends App {
+  val p = basicTicTacToe.startingPosition
+  val console = new BasicConsole()
+  import com.tobiatesan.twist.ai.OllamaAgent
+  val player1 = new OllamaAgent[TicTacToe](model = "gemma3")
+  val player2 = new GenericHumanPlayer[TicTacToe](console)
+  val m = new Match(player1, player2, false, p)
+  print("Type quit to exit\n")
+  try {
+    val res = m.run()
+    print(res.t)
+  } catch {
+    case e: QuitException => print("Quitting, bye!\n")
+  }
+}*/
