@@ -29,7 +29,7 @@ object RandomVsOllamaTicTacToeBenchmark extends App {
           (r: scala.util.Random) =>
           new Match(
             new RandomAgent(r),
-            new OllamaAgent[TicTacToe](model = "gemma3"),
+            new OllamaAgent[TicTacToe](model = "gemma3", role="O"),
             false,
             new TicTacToe().startingPosition
           )

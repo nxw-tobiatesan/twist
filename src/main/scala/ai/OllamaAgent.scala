@@ -13,6 +13,7 @@ import requests._
   */
 class OllamaAgent[G <: Game[G]](
     val model: String = "llama2",
+    val role: String = "any",
     val endpoint: String = "http://localhost:11434"
 ) extends AI[G] {
 
@@ -20,7 +21,7 @@ class OllamaAgent[G <: Game[G]](
   val boardStr = p.toString.replace("\n", " ")
   val moves = p.successor().keys.toList
   val movesStr = moves.mkString(", ")
-  val prompt = s"You are playing a board game. The board is: $boardStr Available moves: $movesStr Pick the best move and reply ONLY with the move in the format given."
+  val prompt = s"You are playing a board game. You are playing as: $role. The board is: $boardStr Available moves: $movesStr Pick the best move and reply ONLY with the move in the format given."
 
   val requestBody = s"""{\"model\":\"$model\",\"prompt\":\"$prompt\"}"""
     val resp = requests.post(s"$endpoint/api/generate",

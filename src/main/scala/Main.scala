@@ -9,6 +9,10 @@ import com.tobiatesan.twist.draughts.{Draughts}
 import com.tobiatesan.twist.matches.{Match}
 import com.tobiatesan.twist.player.{AI, Human, DebugStats}
 import com.tobiatesan.twist.game.{Move, Game, LivePosition, TerminalPosition}
+import games.tictactoe.TicTacToe
+
+object basicDraughts extends Draughts
+object basicTicTacToe extends TicTacToe
 
 ///////////////////////////////////////////////////////////
 //
@@ -106,10 +110,6 @@ class GenericHumanPlayer[G <: Game[G]](val console: Console) extends Human[G] {
 //
 ///////////////////////////////////////////////////////////
 
-// import games.tictactoe.TicTacToe
-
-object basicDraughts extends Draughts
-// object basicTicTacToe extends TicTacToe
 object HumanVsAlpha extends App {
   // Super quick & dirty main method
   val p = basicDraughts.startingPosition
@@ -150,7 +150,7 @@ object HumanVsOllamaDraughts extends App {
   val p = basicDraughts.startingPosition
   val console = new BasicConsole()
   import com.tobiatesan.twist.ai.OllamaAgent
-  val player1 = new OllamaAgent[Draughts](model = "gemma3")
+  val player1 = new OllamaAgent[Draughts](model = "gemma3", role="#")
   val player2 = new GenericHumanPlayer[Draughts](console)
   val m = new Match(player1, player2, false, p)
   print("Type quit to exit\n")
@@ -162,12 +162,11 @@ object HumanVsOllamaDraughts extends App {
   }
 }
 
-/*
 object HumanVsOllamaTicTacToe extends App {
   val p = basicTicTacToe.startingPosition
   val console = new BasicConsole()
   import com.tobiatesan.twist.ai.OllamaAgent
-  val player1 = new OllamaAgent[TicTacToe](model = "gemma3")
+  val player1 = new OllamaAgent[TicTacToe](model = "gemma3", role="X")
   val player2 = new GenericHumanPlayer[TicTacToe](console)
   val m = new Match(player1, player2, false, p)
   print("Type quit to exit\n")
@@ -177,4 +176,4 @@ object HumanVsOllamaTicTacToe extends App {
   } catch {
     case e: QuitException => print("Quitting, bye!\n")
   }
-}*/
+}

@@ -36,7 +36,7 @@ object RandomVsOllamaBenchmark extends App {
           (r: scala.util.Random) =>
           new Match(
             new RandomAgent(r),
-            new OllamaAgent[Draughts](model = "gemma3"),
+            new OllamaAgent[Draughts](model = "gemma3", role="O"),
             false,
             basicDraughts.startingPosition
           )
